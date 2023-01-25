@@ -1,0 +1,78 @@
+Минимальные требования
+Для запуска узлов валидации основной сети или тестовой сети вам потребуется машина со следующими минимальными аппаратными требованиями:
+
+2 или более физических ядер ЦП
+Не менее 200 ГБ дискового пространства SSD
+Не менее 8 ГБ памяти (ОЗУ)
+Пропускная способность сети не менее 100 Мбит/с
+По мере роста использования блокчейна требования к серверу также могут возрасти.
+
+1.⠀Обновим пакеты и систему
+
+sudo apt update && sudo apt upgrade -y
+
+sudo apt install -y curl build-essential git wget jq make gcc tmux chrony lz4 unzip
+
+2. Установка GOland
+
+sudo snap install go --classic
+echo 'export GOPATH="$HOME/go"' >> ~/.profile
+echo 'export GOBIN="$GOPATH/bin"' >> ~/.profile
+echo 'export PATH="$GOBIN:$PATH"' >> ~/.profile
+source ~/.profile
+go version
+
+3. Установка бинарного файла ноды
+
+cd $HOME && rm -rf realio-network
+git clone https://github.com/realiotech/realio-network.git && cd realio-network
+git checkout v0.6.3
+make install
+
+4.⠀Создаем сервисный файл
+sudo tee /etc/systemd/system/realio-networkd.service > /dev/null <<EOF
+[Unit]
+Description=realio-networkd
+After=network.target
+[Service]
+Type=simple
+User=$USER
+ExecStart=$(which realio-networkd) start
+Restart=on-failure
+RestartSec=10
+LimitNOFILE=65535
+[Install]
+WantedBy=multi-user.target
+EOF
+
+5. Запускаем сервис
+
+sudo systemctl daemon-reload
+sudo systemctl enable realio-networkd
+
+6. Настраиваем конфиг
+REALIO_PORT=52
+echo "export REALIO_CHAIN_ID=realionetwork_1110-2" >> $HOME/.bash_profile
+echo "export REALIO_PORT=${REALIO_PORT}" >> $HOME/.bash_profile
+source $HOME/.bash_profile
+
+realio-networkd config chain-id $REALIO_CHAIN_ID
+realio-networkd config keyring-backend test
+realio-networkd config node tcp://localhost:${REALIO_PORT}657
+realio-networkd init ИМЯ_ВАШЕЙ_НОДЫ --chain-id $REALIO_CHAIN_ID
+
+7. Скачиваем Genesis
+
+curl https://raw.githubusercontent.com/realiotech/testnets/master/realionetwork_1110-2/genesis.json > $HOME/.realio-network/config/genesis.json
+
+Перезапускаем сервис и смотрим логи
+
+sudo systemctl daemon-reload
+sudo journalctl -u realio-networkd -f -o cat
+
+
+
+
+
+
+
