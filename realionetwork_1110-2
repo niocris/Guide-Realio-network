@@ -70,7 +70,9 @@ curl https://raw.githubusercontent.com/realiotech/testnets/master/realionetwork_
 sudo systemctl daemon-reload
 sudo journalctl -u realio-networkd -f -o cat
 
+Остановить узел
 
+sudo systemctl stop realio-networkd
 
 
 
