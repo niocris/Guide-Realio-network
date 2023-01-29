@@ -75,7 +75,7 @@ sudo journalctl -u realio-networkd -f -o cat
 
 sudo systemctl stop realio-networkd
 
-финищ
+
 
 
 
