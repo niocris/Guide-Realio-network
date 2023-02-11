@@ -23,7 +23,7 @@ echo 'export PATH="$GOBIN:$PATH"' >> ~/.profile
 source ~/.profile
 go version
 
-3. Установка бинарного файла ноды
+3. Установка бинарного файла вашей ноды
 
 cd $HOME && rm -rf realio-network
 git clone https://github.com/realiotech/realio-network.git && cd realio-network
