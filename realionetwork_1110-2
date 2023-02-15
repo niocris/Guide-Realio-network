@@ -14,7 +14,7 @@ sudo apt update && sudo apt upgrade -y
 
 sudo apt install -y curl build-essential git wget jq make gcc tmux chrony lz4 unzip
 
-2. Установка GOland
+2. Установка GO
 
 sudo snap install go --classic
 echo 'export GOPATH="$HOME/go"' >> ~/.profile
